@@ -10,21 +10,53 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+class UrlInfo {
+    constructor(init) {
+        this.type = "unknown";
+        if (init)
+            Object.assign(this, init);
+    }
+    isEmbeddable() {
+        if (this.type == "image" || this.type == "video")
+            return true;
+        else
+            return false;
+    }
+    /**
+     * Return '' when it can't embed.
+     */
+    renderEmbed() {
+        if (this.type == "image") {
+            return this.renderEmbedImage();
+        }
+        if (this.type == "video") {
+            return this.renderEmbedVideo();
+        }
+        return "";
+    }
+    renderEmbedImage() {
+        return `<img src="${this.imageUrl}" />`;
+    }
+    renderEmbedVideo() {
+        var sources = '';
+        if (this.webmUrl)
+            sources += `<source src="${this.webmUrl}" />`;
+        if (this.mp4Url)
+            sources += `<source src="${this.mp4Url}" />`;
+        if (sources == '') {
+            console.error("Tried to embed video with no sources");
+        }
+        var videoHtml = `<video autoplay loop>${sources}</video>`;
+        return videoHtml;
+    }
+}
+exports.UrlInfo = UrlInfo;
+;
 var video = function (webmUrl, mp4Url) {
     // On imgur when you use the <source> tags
     // it tries to redirect you to the gifv page instead of serving
     // video. We can only circumvent that by putting the src 
     // on the <video> tag :/
-    var sources = '';
-    if (webmUrl)
-        sources += `<source src="${webmUrl}" />`;
-    if (mp4Url)
-        sources += `<source src="${mp4Url}" />`;
-    if (sources == '') {
-        console.error("Tried to embed video with no sources");
-    }
-    var videoHtml = `<video autoplay loop>${sources}</video>`;
-    return videoHtml;
 };
 var equivalentDomains = {
     "youtu.be": "youtube.com",
@@ -64,15 +96,19 @@ function getImgurAlbum(url, getter) {
             console.error("No data from this url :(");
             return null;
         }
-        data.data.images.map((item, index) => {
+        /*data.data.images.map((item, index) => {
             var info = {
                 url: item.link,
                 title: item.title,
                 over18: item.nsfw,
                 commentsLink: ""
             };
-        });
-        return data.data.images[0].link;
+        });*/
+        var firstImage = data.data.images[0];
+        if (firstImage.gifv)
+            return firstImage.gifv;
+        else
+            return firstImage.link;
     });
 }
 ;
@@ -87,9 +123,7 @@ var converters = [
                     return new Urlpedia(jsonGetter).getInfoAsync(singleImageUrl);
                 }
                 else {
-                    return {
-                        recognized: false
-                    };
+                    return new UrlInfo();
                 }
             });
         }
@@ -102,10 +136,11 @@ var converters = [
                 var no_extension = url.replace(/\.\w+$/, '');
                 var webmUrl = no_extension + '.webm';
                 var mp4Url = no_extension + '.mp4';
-                return {
-                    embedHtml: video(webmUrl, mp4Url),
-                    recognized: true,
-                };
+                return new UrlInfo({
+                    webmUrl: webmUrl,
+                    mp4Url: mp4Url,
+                    type: 'video',
+                });
             });
         }
     },
@@ -116,10 +151,10 @@ var converters = [
             return __awaiter(this, void 0, void 0, function* () {
                 var newUrl = url + '.jpg';
                 var image = `<img src="${newUrl}" />`;
-                return {
-                    embedHtml: image,
-                    recognized: true,
-                };
+                return new UrlInfo({
+                    type: "image",
+                    imageUrl: newUrl,
+                });
             });
         }
     },
@@ -128,9 +163,7 @@ var converters = [
         detect: /reddit\.com\/r\/.*/,
         convert: function (url, jsonGetter) {
             return __awaiter(this, void 0, void 0, function* () {
-                return {
-                    recognized: false
-                };
+                return new UrlInfo();
             });
         }
     },
@@ -144,13 +177,13 @@ var converters = [
                 if (match && match.length > 1)
                     var name = match[1];
                 else
-                    return false;
+                    return new UrlInfo();
                 var data = yield jsonGetter('https://gfycat.com/cajax/get/' + name);
-                var html = video(data.gfyItem.webmUrl, data.gfyItem.mp4Url);
-                return {
-                    recognized: true,
-                    embedHtml: html
-                };
+                return new UrlInfo({
+                    type: "video",
+                    webmUrl: data.gfyItem.webmUrl,
+                    mp4Url: data.gfyItem.mp4Url,
+                });
             });
         },
     },
@@ -159,11 +192,10 @@ var converters = [
         detect: /\.(png|jpg|jpeg|gif|bmp)$/,
         convert: function (url, jsonGetter) {
             return __awaiter(this, void 0, void 0, function* () {
-                var newElem = `<img src="${url}"/>`;
-                return {
-                    recognized: true,
-                    embedHtml: newElem,
-                };
+                return new UrlInfo({
+                    type: "image",
+                    imageUrl: url,
+                });
             });
         }
     },
@@ -180,14 +212,13 @@ class Urlpedia {
                     console.log("Matched: " + url + "\n to - " + converter.name);
                     var res = yield converter.convert(url, this.jsonGetter);
                     //console.log(newElem);
-                    if (res.recognized)
+                    if (res.isEmbeddable())
                         return res;
                 }
             }
-            return {
-                recognized: false
-            };
+            return new UrlInfo();
         });
     }
 }
 exports.Urlpedia = Urlpedia;
+//# sourceMappingURL=index.js.map

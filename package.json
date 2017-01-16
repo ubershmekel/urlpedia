@@ -1,6 +1,6 @@
 {
   "name": "urlpedia",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Describe a url to help categorize or embed",
   "main": "index.js",
   "scripts": {

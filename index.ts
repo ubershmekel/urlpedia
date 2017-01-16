@@ -2,7 +2,7 @@
  * Discover information about a url and embed it
  */
 
-
+/// <reference path="./imgur.d.ts" />
 
 type urlType = "image" | "video" | "unknown";
 

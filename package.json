@@ -1,10 +1,11 @@
 {
   "name": "urlpedia",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Describe a url to help categorize or embed",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc -p ."
   },
   "repository": {
     "type": "git",
@@ -21,5 +22,9 @@
   "bugs": {
     "url": "https://github.com/ubershmekel/urlpedia/issues"
   },
-  "homepage": "https://github.com/ubershmekel/urlpedia#readme"
+  "homepage": "https://github.com/ubershmekel/urlpedia#readme",
+  "devDependencies": {
+    "typescript": "^2.1.5"
+  },
+  "types": "index.ts"
 }

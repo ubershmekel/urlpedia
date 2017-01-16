@@ -37,7 +37,7 @@ mocha_1.describe('Urlpedia', function () {
             //console.log(data.renderEmbed());
             assert.equal(expected, data.renderEmbed());
         }));
-        mocha_1.it('imgur convert gallery to image', () => __awaiter(this, void 0, void 0, function* () {
+        mocha_1.it('cnn invalid link', () => __awaiter(this, void 0, void 0, function* () {
             var expected = '';
             var invalid = 'http://cnn.com/gallery/pNcN8';
             var data = yield upedia.getInfoAsync(invalid);

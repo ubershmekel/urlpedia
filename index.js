@@ -209,7 +209,7 @@ class Urlpedia {
             for (var key in converters) {
                 var converter = converters[key];
                 if (url.match(converter.detect)) {
-                    console.log("Matched: " + url + "\n to - " + converter.name);
+                    //console.log("Matched: " + url + "\n to - " + converter.name);
                     var res = yield converter.convert(url, this.jsonGetter);
                     //console.log(newElem);
                     if (res.isEmbeddable())

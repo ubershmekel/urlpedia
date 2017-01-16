@@ -32,7 +32,7 @@ describe('Urlpedia', function () {
             //console.log(data.renderEmbed());
             assert.equal(expected, data.renderEmbed());
         });
-        it('imgur convert gallery to image', async () => {
+        it('cnn invalid link', async () => {
             var expected = '';
             var invalid = 'http://cnn.com/gallery/pNcN8';
             var data = await upedia.getInfoAsync(invalid)

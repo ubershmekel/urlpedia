@@ -25,35 +25,32 @@ var video = function (webmUrl, mp4Url) {
     }
     var videoHtml = `<video autoplay loop>${sources}</video>`;
     return videoHtml;
-    /*
-    //video.attr("src", urls[0]);
-    
-    var url;
-    if(!webmUrl && !mp4Url) {
-        console.error("Empty video urls given");
-        return;
-    }
-    
-    if(mp4Url)
-        url = mp4Url
-    else
-        url = webmUrl
-    
-    if (Modernizr.video.webm && webmUrl) {
-        // Thank you http://diveintohtml5.info/detect.html
-        // try WebM
-        url = webmUrl;
-    }
-
-    url = url.replace("http://", "https://");
-    video.attr("src", url);
-    return video;
-    */
 };
 var equivalentDomains = {
     "youtu.be": "youtube.com",
-    "i.imgur.com": "imgur.com"
 };
+/**
+ * simplifyDotCom('www.twitter.com') == 'twitter.com'
+ */
+function simplifyDotCom(domain) {
+    if (domain.endsWith(".com")) {
+        var parts = domain.split('.');
+        var lastTwoParts = parts.slice(parts.length - 2).join('.');
+        return lastTwoParts;
+    }
+    else {
+        return domain;
+    }
+}
+function normalizeDomain(domain) {
+    if (equivalentDomains[domain]) {
+        return equivalentDomains[domain];
+    }
+    else {
+        return simplifyDotCom(domain);
+    }
+}
+exports.normalizeDomain = normalizeDomain;
 function getImgurAlbum(url, getter) {
     return __awaiter(this, void 0, void 0, function* () {
         var albumID = url.match(/.*\/(.+?$)/)[1];

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 const axios_1 = require("axios");
 const index_1 = require("./index");
-function nopget(url, headers = {}) {
+function jsonGetter(url, headers = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         var res = yield axios_1.default.get(url, {
             responseType: "json",
@@ -20,7 +20,7 @@ function nopget(url, headers = {}) {
 }
 function test() {
     return __awaiter(this, void 0, void 0, function* () {
-        var upedia = new index_1.Urlpedia(nopget);
+        var upedia = new index_1.Urlpedia(jsonGetter);
         var gifv = 'http://i.imgur.com/yiPKTF4.gifv';
         var data = yield upedia.getInfoAsync(gifv);
         console.log(data.embedHtml);

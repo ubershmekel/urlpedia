@@ -18,36 +18,32 @@ var video = function (webmUrl, mp4Url) {
     }
     var videoHtml = `<video autoplay loop>${sources}</video>`;
     return videoHtml;
-
-    /*
-    //video.attr("src", urls[0]);
-    
-    var url;
-    if(!webmUrl && !mp4Url) {
-        console.error("Empty video urls given");
-        return;
-    }
-    
-    if(mp4Url)
-        url = mp4Url
-    else
-        url = webmUrl
-    
-    if (Modernizr.video.webm && webmUrl) {
-        // Thank you http://diveintohtml5.info/detect.html
-        // try WebM
-        url = webmUrl;
-    }
-
-    url = url.replace("http://", "https://");
-    video.attr("src", url);
-    return video;
-    */
 }
 
 var equivalentDomains = {
     "youtu.be": "youtube.com",
-    "i.imgur.com": "imgur.com"
+}
+
+
+/**
+ * simplifyDotCom('www.twitter.com') == 'twitter.com' 
+ */
+function simplifyDotCom(domain: string) {
+    if (domain.endsWith(".com")) {
+        var parts = domain.split('.');
+        var lastTwoParts = parts.slice(parts.length - 2).join('.');
+        return lastTwoParts;
+    } else {
+        return domain;
+    }
+}
+
+export function normalizeDomain(domain: string) {
+    if(equivalentDomains[domain]) {
+        return equivalentDomains[domain];
+    } else {
+        return simplifyDotCom(domain);
+    }
 }
 
 export type JsonGetterFunc = (url: string, headers?: Object) => Promise<any>;

@@ -3,7 +3,7 @@ import axios from 'axios';
 import {Urlpedia} from './index';
 
 
-async function nopget(url: string, headers: Object = {}): Promise<any> {
+async function jsonGetter(url: string, headers: Object = {}): Promise<any> {
     var res = await axios.get(url, {
         responseType: "json",
         headers: headers
@@ -12,7 +12,7 @@ async function nopget(url: string, headers: Object = {}): Promise<any> {
 }
 
 async function test() {
-    var upedia = new Urlpedia(nopget);
+    var upedia = new Urlpedia(jsonGetter);
 
     var gifv = 'http://i.imgur.com/yiPKTF4.gifv';
     var data = await upedia.getInfoAsync(gifv)

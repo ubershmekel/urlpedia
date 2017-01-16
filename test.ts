@@ -1,6 +1,9 @@
+import * as assert from 'assert';
+import { describe, it } from 'mocha';
+
 import axios from 'axios';
 
-import {Urlpedia} from './index';
+import { Urlpedia } from './index';
 
 
 async function jsonGetter(url: string, headers: Object = {}): Promise<any> {
@@ -11,24 +14,29 @@ async function jsonGetter(url: string, headers: Object = {}): Promise<any> {
     return res.data;
 }
 
-async function test() {
+
+describe('Urlpedia', function () {
     var upedia = new Urlpedia(jsonGetter);
-
-    var gifv = 'http://i.imgur.com/yiPKTF4.gifv';
-    var data = await upedia.getInfoAsync(gifv)
-    console.log(data.embedHtml);
-    console.log(data.recognized);
-
-
-    var galleryOneThing = 'http://imgur.com/gallery/pNcN8';
-    var data = await upedia.getInfoAsync(galleryOneThing)
-    console.log(data.embedHtml);
-    console.log(data.recognized);
-}
-
-test().then(function() {
-    console.log('succeeded');
-}).catch(function() {
-    console.log('failed');
-    
+    describe('embed', function () {
+        it('gifv create a video element', async () => {
+            var gifv = 'http://i.imgur.com/yiPKTF4.gifv';
+            var data = await upedia.getInfoAsync(gifv)
+            //console.log(data.renderEmbed());
+            var expected = '<video autoplay loop><source src="http://i.imgur.com/yiPKTF4.webm" /><source src="http://i.imgur.com/yiPKTF4.mp4" /></video>';
+            assert.equal(expected, data.renderEmbed());
+        });
+        it('imgur convert gallery to image', async () => {
+            var expected = '<video autoplay loop><source src="http://i.imgur.com/yiPKTF4.webm" /><source src="http://i.imgur.com/yiPKTF4.mp4" /></video>';
+            var galleryOneThing = 'http://imgur.com/gallery/pNcN8';
+            var data = await upedia.getInfoAsync(galleryOneThing)
+            //console.log(data.renderEmbed());
+            assert.equal(expected, data.renderEmbed());
+        });
+        it('imgur convert gallery to image', async () => {
+            var expected = '';
+            var invalid = 'http://cnn.com/gallery/pNcN8';
+            var data = await upedia.getInfoAsync(invalid)
+            assert.equal(expected, data.renderEmbed());
+        });
+    });
 });

@@ -4,7 +4,7 @@
 
 /// <reference path="./imgur.d.ts" />
 
-type urlType = "image" | "video" | "unknown";
+export type urlType = "image" | "video" | "unknown";
 
 export class UrlInfo {
     type: urlType = "unknown";
@@ -63,32 +63,6 @@ var video = function (webmUrl, mp4Url) {
     // video. We can only circumvent that by putting the src 
     // on the <video> tag :/
 
-}
-
-var equivalentDomains = {
-    "youtu.be": "youtube.com",
-}
-
-
-/**
- * simplifyDotCom('www.twitter.com') == 'twitter.com' 
- */
-function simplifyDotCom(domain: string) {
-    if (domain.endsWith(".com")) {
-        var parts = domain.split('.');
-        var lastTwoParts = parts.slice(parts.length - 2).join('.');
-        return lastTwoParts;
-    } else {
-        return domain;
-    }
-}
-
-export function normalizeDomain(domain: string) {
-    if(equivalentDomains[domain]) {
-        return equivalentDomains[domain];
-    } else {
-        return simplifyDotCom(domain);
-    }
 }
 
 export type JsonGetterFunc = (url: string, headers?: Object) => Promise<any>;

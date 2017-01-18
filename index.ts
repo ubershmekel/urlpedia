@@ -194,7 +194,7 @@ export class Urlpedia {
         this.jsonGetter = jsonGetter;
     }
 
-    async getInfoAsync(url): Promise<UrlInfo> {
+    async getInfoAsync(url: string): Promise<UrlInfo> {
         for (var key in converters) {
             var converter = converters[key];
             if (url.match(converter.detect)) {

@@ -21,5 +21,5 @@ export declare type JsonGetterFunc = (url: string, headers?: Object) => Promise<
 export declare class Urlpedia {
     jsonGetter: JsonGetterFunc;
     constructor(jsonGetter: JsonGetterFunc);
-    getInfoAsync(url: any): Promise<UrlInfo>;
+    getInfoAsync(url: string): Promise<UrlInfo>;
 }
